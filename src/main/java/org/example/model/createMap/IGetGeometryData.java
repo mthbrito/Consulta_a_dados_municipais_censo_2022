@@ -1,4 +1,6 @@
-package org.example.model;
+package org.example.model.createMap;
+
+import org.example.model.City;
 
 import java.util.List;
 

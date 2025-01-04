@@ -1,5 +1,6 @@
-package org.example.model;
+package org.example.model.createMap;
 
+import org.example.model.City;
 import org.geotools.api.feature.simple.SimpleFeature;
 import org.geotools.api.feature.simple.SimpleFeatureType;
 import org.geotools.api.style.Fill;
@@ -25,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class GetMap implements IGetGeometryData, IProcessGeometryData, ICreateMapLayer, ICreateMapStyle, ICreateMapContent{
+public abstract class CreateMap implements IGetGeometryData, IProcessGeometryData, ICreateMapLayer, ICreateMapStyle, ICreateMapContent{
 
     @Override
     public String getGeometryData(City search) {
@@ -56,7 +57,6 @@ public abstract class GetMap implements IGetGeometryData, IProcessGeometryData, 
         GeometryFactory geometryFactory = new GeometryFactory();
         return geometryFactory.createGeometryCollection(geometryArray);
     }
-
 
     @Override
     public Layer createMapLayer(MultiPolygon multiPolygons, Style style) {

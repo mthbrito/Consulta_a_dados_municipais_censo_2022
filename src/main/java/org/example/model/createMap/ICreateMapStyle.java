@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.createMap;
 
 import org.geotools.api.style.Style;
 

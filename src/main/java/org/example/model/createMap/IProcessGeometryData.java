@@ -1,4 +1,4 @@
-package org.example.model;
+package org.example.model.createMap;
 
 import org.locationtech.jts.geom.GeometryCollection;
 import org.locationtech.jts.geom.MultiPolygon;

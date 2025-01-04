@@ -1,18 +1,13 @@
 package org.example.view;
 
-import org.example.service.InfoService;
-import org.example.service.MapService;
-import org.geotools.map.MapContent;
 import org.geotools.swing.JMapFrame;
 import org.geotools.swing.JMapPane;
 
 import java.awt.*;
-import java.io.IOException;
-import java.sql.SQLException;
 
 import javax.swing.*;
 
-import static org.example.view.ConfigView.*;
+import static org.example.service.ViewService.*;
 
 public class WindowView {
     private JFrame frame;
@@ -27,7 +22,7 @@ public class WindowView {
                     WindowView window = new WindowView();
                     window.frame.setVisible(true);
                 } catch (Exception e) {
-                    e.printStackTrace();
+                    System.out.println(e.getMessage());
                 }
             }
         });
@@ -147,125 +142,8 @@ public class WindowView {
 
         rdbtnArea.addItemListener(e -> configRdbtn2(txt1, txt2, textArea, textArea2, lblResultados, mainMapFrame, localMapFrame, localMapPane));
 
-        btnEnter.addActionListener(e -> {
-            int valor1, valor2, nRows;
-            String nome1, nome2, infoMunicipio, infoEstado, infoPopulacao, infoArea, text;
-            MapContent mainMapContent, localMapContent;
+        btnEnter.addActionListener(e -> configBtnEnter(rdbtnMun, rdbtnEst, rdbtnPop, rdbtnArea, checkBox, txt1, txt2, textArea, textArea2, lblResultados, mainMapFrame, localMapFrame));
 
-            InfoService info = new InfoService();
-            MapService map = new MapService();
-
-            if (rdbtnMun.isSelected()) {
-                nome1 = txt1.getText();
-                try {
-                    infoMunicipio = info.getInfoMunicipio(nome1);
-                    textArea.setText(infoMunicipio);
-
-                    nRows = info.getRowsMunicipio(nome1);
-                    lblResultados.setText(nRows + " resultado(s)");
-
-                    if (checkBox.isSelected() && nRows == 1){
-                        mainMapContent = map.getMapMunicipio(nome1);
-                        localMapContent = map.getLocalMapMunicipio(nome1);
-
-                        resetMap(mainMapFrame, localMapFrame);
-                        mainMapFrame.setMapContent(mainMapContent);
-                        localMapFrame.setMapContent(localMapContent);
-
-                        txt2.setVisible(false);
-                        txt2.setText(null);
-                    }
-                    else if(checkBox.isSelected() && nRows > 1){
-                        nome2 = txt2.getText();
-                        txt2.setVisible(true);
-
-                        resetMap(mainMapFrame, localMapFrame);
-
-                        if(!nome2.isEmpty()) {
-                            mainMapContent = map.getMapMunicipio(nome1, nome2);
-                            localMapContent = map.getLocalMapMunicipio(nome1, nome2);
-
-                            resetMap(mainMapFrame, localMapFrame);
-                            mainMapFrame.setMapContent(mainMapContent);
-                            localMapFrame.setMapContent(localMapContent);
-
-                        }
-                    } else {
-                        resetData1(txt1, txt2, textArea, textArea2, lblResultados);
-                        resetMap(mainMapFrame, localMapFrame);
-                        textArea.setText("Sem dados");
-                    }
-
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            } else if (rdbtnEst.isSelected()) {
-                nome1 = txt1.getText();
-                try {
-                    infoEstado = info.getInfoEstado(nome1);
-                    textArea.setText(infoEstado);
-
-                    nRows = info.getRowsEstado(nome1);
-                    lblResultados.setText(nRows + " resultado(s)");
-
-                    if (checkBox.isSelected()){
-                        mainMapContent = map.getMapEstado(nome1);
-                        localMapContent = map.getLocalMapEstado(nome1);
-
-                        mainMapFrame.setMapContent(mainMapContent);
-                        localMapFrame.setMapContent(localMapContent);
-                    }
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            } else if (rdbtnPop.isSelected()) {
-                valor1 = Integer.parseInt(txt1.getText());
-                valor2 = Integer.parseInt(txt2.getText());
-                try {
-                    infoPopulacao = info.getInfoPopulacao(valor1, valor2);
-                    textArea.setText(infoPopulacao);
-
-                    nRows = info.getRowsPopulacao(valor1, valor2);
-                    lblResultados.setText(nRows + " resultado(s)");
-
-                    if(checkBox.isSelected()){
-                        mainMapContent = map.getMapPopulacao(valor1, valor2);
-
-                        mainMapFrame.setMapContent(mainMapContent);
-                        localMapFrame.setMapContent(new MapContent());
-
-                        text = info.getSumTotalPopulation("populacao", valor1, valor2) + "\n" + info.getSumTotalArea("populacao", valor1,valor2);
-                        textArea2.setText(text);
-                    }
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            } else if (rdbtnArea.isSelected()) {
-                valor1 = Integer.parseInt(txt1.getText());
-                valor2 = Integer.parseInt(txt2.getText());
-                try {
-                    infoArea = info.getInfoArea(valor1, valor2);
-                    textArea.setText(infoArea);
-
-                    nRows = info.getRowsArea(valor1, valor2);
-                    lblResultados.setText(nRows + " resultado(s)");
-
-                    if(checkBox.isSelected()) {
-                        mainMapContent = map.getMapArea(valor1, valor2);
-
-                        mainMapFrame.setMapContent(mainMapContent);
-                        localMapFrame.setMapContent(new MapContent());
-
-                        text = info.getSumTotalPopulation("area", valor1, valor2) + "\n" + info.getSumTotalArea("area", valor1,valor2);
-                        textArea2.setText(text);
-                    }
-                } catch (SQLException | IOException ex) {
-                    throw new RuntimeException(ex);
-                }
-            }
-            textArea.setCaretPosition(0);
-            lblResultados.setVisible(true);
-        });
     }
 }
 

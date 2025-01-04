@@ -2,8 +2,9 @@ package org.example.service;
 
 import org.example.repository.Repository;
 import org.example.model.City;
-import org.example.model.GetMap;
+import org.example.model.createMap.CreateMap;
 import org.geotools.api.style.Style;
+import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.map.Layer;
 import org.geotools.map.MapContent;
 import org.locationtech.jts.geom.GeometryCollection;
@@ -15,7 +16,7 @@ import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.List;
 
-public class MapService extends GetMap {
+public class MapService extends CreateMap {
 
     private final Repository r = new Repository();
 
@@ -35,10 +36,14 @@ public class MapService extends GetMap {
 
     public Layer getMapLayerMunicipio(String municipio, String estado) throws SQLException, IOException {
         City search = r.findDataMunicipioEstado(municipio, estado);
-        Style style = createMapStyle(Color.RED, 0.7, Color.BLACK, 0.8);
-        String geometryData = getGeometryData(search);
-        MultiPolygon multiPolygons = processGeometryData(geometryData);
-        return createMapLayer(multiPolygons, style);
+        if(search.getMunicipio() != null) {
+            Style style = createMapStyle(Color.RED, 0.7, Color.BLACK, 0.8);
+            String geometryData = getGeometryData(search);
+            MultiPolygon multiPolygons = processGeometryData(geometryData);
+            return createMapLayer(multiPolygons, style);
+        } else {
+            return defaultLayer();
+        }
     }
 
     public Layer getMapLayerEstado(String estado) throws SQLException, IOException {
@@ -79,6 +84,15 @@ public class MapService extends GetMap {
         return createMapLayer(geometryCollection, style);
     }
 
+    public Layer defaultLayer() {
+        return new Layer() {
+            @Override
+            public ReferencedEnvelope getBounds() {
+                return new ReferencedEnvelope();
+            }
+        };
+    }
+
     public MapContent getMapMunicipio(String municipio) throws SQLException, IOException {
         Layer layerMunicipio = getMapLayerMunicipio(municipio);
         return createMapContent(layerMunicipio);
@@ -86,11 +100,15 @@ public class MapService extends GetMap {
 
     public MapContent getMapMunicipio(String municipio, String estado) throws SQLException, IOException {
         Layer layerMunicipio = getMapLayerMunicipio(municipio, estado);
-        return createMapContent(layerMunicipio);
+        if(layerMunicipio != null) {
+            return createMapContent(layerMunicipio);
+        } else {
+            return new MapContent();
+        }
     }
 
     public MapContent getLocalMapMunicipio(String municipio) throws SQLException, IOException {
-        String estado = r.findDataMunicipio(municipio).getFirst().getEstado();
+        String estado = !r.findDataMunicipio(municipio).isEmpty() ? r.findDataMunicipio(municipio).getFirst().getEstado() : "";
         Layer layerMunicipio = getMapLayerMunicipio(municipio);
         Layer layerEstado = getMapLayerEstado(estado);
         List<Layer> layers = Arrays.asList(layerEstado, layerMunicipio);
@@ -110,24 +128,35 @@ public class MapService extends GetMap {
     }
 
     public MapContent getLocalMapEstado(String estado) throws SQLException, IOException {
-        Layer layerEstado = getMapLayerOnlyEstado(estado);
-        Layer layerEstados = getMapLayerEstados();
-        List<Layer> layers = Arrays.asList(layerEstados, layerEstado);
-        return createMapContent(layers);
+        if (!r.findDataEstado(estado).isEmpty()) {
+            Layer layerEstado = getMapLayerOnlyEstado(estado);
+            Layer layerEstados = getMapLayerEstados();
+            List<Layer> layers = Arrays.asList(layerEstados, layerEstado);
+            return createMapContent(layers);
+        } else {
+            return new MapContent();
+        }
     }
 
     public MapContent getMapPopulacao(int infLim, int supLim) throws SQLException, IOException {
-        Layer layerPopulacao = getMapLayerPopulacao(infLim, supLim);
-        Layer layerEstados = getMapLayerEstados();
-        List<Layer> layers = Arrays.asList(layerEstados, layerPopulacao);
-        return createMapContent(layers);
+        if (!r.findDataPopulacao(infLim, supLim).isEmpty()) {
+            Layer layerPopulacao = getMapLayerPopulacao(infLim, supLim);
+            Layer layerEstados = getMapLayerEstados();
+            List<Layer> layers = Arrays.asList(layerEstados, layerPopulacao);
+            return createMapContent(layers);
+        } else {
+            return new MapContent();
+        }
     }
 
     public MapContent getMapArea(int infLim, int supLim) throws SQLException, IOException {
-        Layer layerArea = getMapLayerArea(infLim, supLim);
-        Layer layerEstados = getMapLayerEstados();
-        List<Layer> layers = Arrays.asList(layerEstados, layerArea);
-        return createMapContent(layers);
+        if (!r.findDataArea(infLim, supLim).isEmpty()) {
+            Layer layerArea = getMapLayerArea(infLim, supLim);
+            Layer layerEstados = getMapLayerEstados();
+            List<Layer> layers = Arrays.asList(layerEstados, layerArea);
+            return createMapContent(layers);
+        } else {
+            return new MapContent();
+        }
     }
-
 }
