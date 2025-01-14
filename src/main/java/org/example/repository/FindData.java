@@ -69,7 +69,7 @@ public abstract class FindData {
     public List<String> findGeometry(PreparedStatement st) throws SQLException {
         ResultSet rs = st.executeQuery();
         List<String> search = new ArrayList<>();
-        while(rs.next()) {
+        while (rs.next()) {
             search.add(rs.getString("geometry"));
         }
         return search;

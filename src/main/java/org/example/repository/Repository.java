@@ -2,7 +2,9 @@ package org.example.repository;
 
 import org.example.model.City;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.List;
 
 public class Repository extends FindData {
@@ -76,8 +78,8 @@ public class Repository extends FindData {
     }
 
     public int sumTotalPopulation(String search, int infLim, int supLim) throws SQLException {
-        String sql = "";
-        if(search.equals("populacao")) {
+        String sql;
+        if (search.equals("populacao")) {
             sql = "select sum(populacao) as sumRows from municipios_censo2022 where populacao > ? and populacao < ?";
             return sumRowsInt(con, sql, infLim, supLim);
         } else if (search.equals("area")) {
@@ -93,8 +95,8 @@ public class Repository extends FindData {
     }
 
     public int sumTotalArea(String search, int infLim, int supLim) throws SQLException {
-        String sql = "";
-        if(search.equals("populacao")) {
+        String sql;
+        if (search.equals("populacao")) {
             sql = "select sum(area) as sumRows from municipios_censo2022 where populacao > ? and populacao < ?";
             return sumRowsInt(con, sql, infLim, supLim);
         } else if (search.equals("area")) {

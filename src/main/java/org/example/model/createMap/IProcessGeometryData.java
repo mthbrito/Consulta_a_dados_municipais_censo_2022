@@ -9,6 +9,7 @@ import java.util.List;
 public interface IProcessGeometryData {
 
     MultiPolygon processGeometryData(String geometry) throws IOException;
+
     GeometryCollection processGeometryData(List<String> geometries) throws IOException;
 
 }

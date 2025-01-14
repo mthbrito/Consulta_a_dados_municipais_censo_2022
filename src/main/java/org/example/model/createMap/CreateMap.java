@@ -26,7 +26,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class CreateMap implements IGetGeometryData, IProcessGeometryData, ICreateMapLayer, ICreateMapStyle, ICreateMapContent{
+public abstract class CreateMap implements IGetGeometryData, IProcessGeometryData, ICreateMapLayer, ICreateMapStyle, ICreateMapContent {
 
     @Override
     public String getGeometryData(City search) {
@@ -36,7 +36,7 @@ public abstract class CreateMap implements IGetGeometryData, IProcessGeometryDat
     @Override
     public List<String> getGeometryData(List<City> search) {
         List<String> geometries = new ArrayList<>();
-        for(City city : search) {
+        for (City city : search) {
             geometries.add(city.getGeometry());
         }
         return geometries;
@@ -50,7 +50,7 @@ public abstract class CreateMap implements IGetGeometryData, IProcessGeometryDat
     @Override
     public GeometryCollection processGeometryData(List<String> geometries) throws IOException {
         List<Geometry> geometriesList = new ArrayList<>();
-        for(String geometry: geometries) {
+        for (String geometry : geometries) {
             geometriesList.add(new GeometryJSON().readMultiPolygon(geometry));
         }
         Geometry[] geometryArray = geometriesList.toArray(new Geometry[0]);
@@ -105,14 +105,14 @@ public abstract class CreateMap implements IGetGeometryData, IProcessGeometryDat
     @Override
     public MapContent createMapContent(List<Layer> layers) {
         MapContent mapContent = new MapContent();
-        for(Layer layer: layers) {
+        for (Layer layer : layers) {
             mapContent.addLayer(layer);
         }
         adjustZoomLayer(mapContent, layers.getFirst());
         return mapContent;
     }
 
-    private ReferencedEnvelope setNewBounds(ReferencedEnvelope bounds){
+    private ReferencedEnvelope setNewBounds(ReferencedEnvelope bounds) {
         return new ReferencedEnvelope(
                 bounds.getMinX() - (bounds.getWidth() * 0.05),
                 bounds.getMaxX() + (bounds.getWidth() * 0.05),
@@ -122,7 +122,7 @@ public abstract class CreateMap implements IGetGeometryData, IProcessGeometryDat
         );
     }
 
-    private void adjustZoomLayer (MapContent map, Layer layer) {
+    private void adjustZoomLayer(MapContent map, Layer layer) {
         ReferencedEnvelope bounds = layer.getBounds();
         ReferencedEnvelope newBounds = setNewBounds(bounds);
         map.getViewport().setBounds(newBounds);

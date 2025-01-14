@@ -1,8 +1,8 @@
 package org.example.service;
 
-import org.example.repository.Repository;
 import org.example.model.City;
 import org.example.model.createMap.CreateMap;
+import org.example.repository.Repository;
 import org.geotools.api.style.Style;
 import org.geotools.geometry.jts.ReferencedEnvelope;
 import org.geotools.map.Layer;
@@ -23,7 +23,7 @@ public class MapService extends CreateMap {
     public Layer getMapLayerMunicipio(String municipio) throws SQLException, IOException {
         List<City> search = r.findDataMunicipio(municipio);
         Style style = createMapStyle(Color.RED, 0.7, Color.BLACK, 0.8);
-        if(search.size() == 1) {
+        if (search.size() == 1) {
             String geometryData = getGeometryData(search.getFirst());
             MultiPolygon multiPolygons = processGeometryData(geometryData);
             return createMapLayer(multiPolygons, style);
@@ -36,7 +36,7 @@ public class MapService extends CreateMap {
 
     public Layer getMapLayerMunicipio(String municipio, String estado) throws SQLException, IOException {
         City search = r.findDataMunicipioEstado(municipio, estado);
-        if(search.getMunicipio() != null) {
+        if (search.getMunicipio() != null) {
             Style style = createMapStyle(Color.RED, 0.7, Color.BLACK, 0.8);
             String geometryData = getGeometryData(search);
             MultiPolygon multiPolygons = processGeometryData(geometryData);
@@ -100,7 +100,7 @@ public class MapService extends CreateMap {
 
     public MapContent getMapMunicipio(String municipio, String estado) throws SQLException, IOException {
         Layer layerMunicipio = getMapLayerMunicipio(municipio, estado);
-        if(layerMunicipio != null) {
+        if (layerMunicipio != null) {
             return createMapContent(layerMunicipio);
         } else {
             return new MapContent();

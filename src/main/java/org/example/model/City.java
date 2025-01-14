@@ -8,9 +8,8 @@ public class City {
     private double area;
     private String geometry;
 
-    public City(){
-
-    };
+    public City() {
+    }
 
     public String getMunicipio() {
         return municipio;

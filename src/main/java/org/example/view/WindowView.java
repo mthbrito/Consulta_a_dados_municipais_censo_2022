@@ -3,9 +3,8 @@ package org.example.view;
 import org.geotools.swing.JMapFrame;
 import org.geotools.swing.JMapPane;
 
-import java.awt.*;
-
 import javax.swing.*;
+import java.awt.*;
 
 import static org.example.service.ViewService.*;
 
@@ -13,26 +12,24 @@ public class WindowView {
     private JFrame frame;
 
     /**
-     * Launch the application.
-     */
-    public static void main(String[] args) {
-        EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                try {
-                    WindowView window = new WindowView();
-                    window.frame.setVisible(true);
-                } catch (Exception e) {
-                    System.out.println(e.getMessage());
-                }
-            }
-        });
-    }
-
-    /**
      * Create the application.
      */
     public WindowView() {
         initialize();
+    }
+
+    /**
+     * Launch the application.
+     */
+    public static void main(String[] args) {
+        EventQueue.invokeLater(() -> {
+            try {
+                WindowView window = new WindowView();
+                window.frame.setVisible(true);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        });
     }
 
     /**
@@ -44,6 +41,9 @@ public class WindowView {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setTitle("Consulta a dados municipais (Censo 2022)");
         frame.getContentPane().setLayout(null);
+
+        ImageIcon icon = new ImageIcon("src/main/java/org/example/view/images/logotipo-ibge.png");
+        frame.setIconImage(icon.getImage());
 
         JPanel panel = new JPanel(null);
         panel.setBounds(10, 11, 232, 500);
@@ -100,13 +100,13 @@ public class WindowView {
         panel.add(btnEnter);
 
         JTextArea textArea = new JTextArea();
-        textArea.setMargin(new Insets(10,10,10,10));
+        textArea.setMargin(new Insets(10, 10, 10, 10));
         textArea.setEditable(false);
         panel.add(textArea);
 
         JTextArea textArea2 = new JTextArea();
         textArea2.setBounds(250, 254, 270, 230);
-        textArea2.setMargin(new Insets(10,10,10,10));
+        textArea2.setMargin(new Insets(10, 10, 10, 10));
         textArea2.setEditable(false);
         frame.getContentPane().add(textArea2);
 

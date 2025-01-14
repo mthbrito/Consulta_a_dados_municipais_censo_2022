@@ -28,10 +28,10 @@ public class InfoService extends Repository {
         return getInfo(search);
     }
 
-    public String getInfo(List<City> search){
+    public String getInfo(List<City> search) {
         StringBuilder sb = new StringBuilder();
         for (City c : search) {
-            sb.append(c.toString()) ;
+            sb.append(c.toString());
         }
         return String.valueOf(sb);
     }
@@ -54,11 +54,11 @@ public class InfoService extends Repository {
 
     public String getSumTotalPopulation(String search, int infLim, int supLim) throws SQLException {
         int total = sumTotalPopulation(search, infLim, supLim);
-        return "População total: " + total + " (" + String.format("%.2f", (((double)total/(double)sumBrazilPopulation())*100)) + "%) ";
+        return "População total: " + total + " (" + String.format("%.2f", (((double) total / (double) sumBrazilPopulation()) * 100)) + "%) ";
     }
 
     public String getSumTotalArea(String search, int infLim, int supLim) throws SQLException {
         int total = sumTotalArea(search, infLim, supLim);
-        return "Área total: " + total + " (" + String.format("%.2f", (((double)total/(double)sumBrazilArea())*100)) + "%) ";
+        return "Área total: " + total + " (" + String.format("%.2f", (((double) total / (double) sumBrazilArea()) * 100)) + "%) ";
     }
 }
